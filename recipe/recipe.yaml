@@ -1,0 +1,50 @@
+schema_version: 1
+
+context:
+  name: elasticsearch-dbapi
+  version: "0.3.0"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://files.pythonhosted.org/packages/source/${{ name[0] }}/${{ name }}/${{ name | replace('-', '_') }}-${{ version }}.tar.gz
+  sha256: 01217dbb84aaf9ad776852328a7aa33e3e1f4917b7e3c1d38392f4ee8ea46472
+
+build:
+  number: 0
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - pip
+    - python ${{ python_min }}.*
+    - setuptools
+  run:
+    - opensearch-py >=2.8.0,<3
+    - python >=${{ python_min }}
+    - elasticsearch >=7.17.13,<8
+    - packaging >=21.0
+    - sqlalchemy
+
+tests:
+  - python:
+      imports:
+        - es
+        - es.elastic
+      pip_check: true
+      python_version: ${{ python_min }}
+
+about:
+  summary: A DBAPI and SQLAlchemy dialect for Elasticsearch
+  license: Apache-2.0
+  license_file: LICENSE.txt
+  homepage: https://github.com/preset-io/elasticsearch-dbapi
+  repository: https://github.com/preset-io/elasticsearch-dbapi
+  documentation: https://github.com/preset-io/elasticsearch-dbapi
+
+extra:
+  recipe-maintainers:
+    - xylar
